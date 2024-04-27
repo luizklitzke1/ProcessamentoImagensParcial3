@@ -10,7 +10,6 @@ if __name__ == "__main__":
     path_datasets = "datasets"
     file_names = os.listdir(path_datasets)
 
-
     for file_name in file_names:
         img_path = os.path.join(path_datasets, file_name)
 
@@ -23,7 +22,7 @@ if __name__ == "__main__":
         Z = np.float32(Z)
 
         criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-        K = 3
+        K = 5
         ret, label, center = cv.kmeans(Z, K, None, criteria, 10, cv.KMEANS_RANDOM_CENTERS)
 
         center = np.uint8(center)
@@ -41,22 +40,22 @@ if __name__ == "__main__":
         #Base em https://pyimagesearch.com/2021/04/28/opencv-image-histograms-cv2-calchist/
         hist = cv.calcHist([img_grayscale], [0], None, [256], [0, 256])
         plt.title('4- Histograma')
-        plt.plot(hist)
-        plt.show()
-            
-        colors_hist = np.nonzero(hist.flatten())[0]
 
+        #Pega a média do primeiro (mais escuro) tom de cinza no histograma - que representa os núcleos
+        colors_hist = np.nonzero(hist.flatten())[0]
         first_gray = colors_hist[1]
         second_gray = colors_hist[2]
-
         lower_threshold = first_gray / 2
         upper_threshold = (first_gray + second_gray) / 2
+        plt.axvline(x = lower_threshold, color = "g", label = "lower_threshold")
+        plt.axvline(x = upper_threshold, color = "r", label = "upper_threshold")
+        plt.plot(hist)
+        plt.show()
 
         plt.title("5 - Threshold")
         thresholded_img = cv.inRange(img_grayscale, lower_threshold, upper_threshold)
         plt.imshow(thresholded_img, cmap = "gray")
         plt.show()
-
     
         contours, hierarchy = cv.findContours(thresholded_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         img_contours = cv.drawContours(img, contours, -1, (0, 255, 0), 1)
