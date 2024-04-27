@@ -28,7 +28,7 @@ if __name__ == "__main__":
         center = np.uint8(center)
         res = center[label.flatten()]
         res2 = res.reshape((img.shape))
-        plt.title("2- K-Means")
+        plt.title("2- K-Means (" + str(K) + ")")
         plt.imshow(res2)
         plt.show()
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         hist = cv.calcHist([img_grayscale], [0], None, [256], [0, 256])
         plt.title('4- Histograma')
 
-        #Pega a média do primeiro (mais escuro) tom de cinza no histograma - que representa os núcleos
+        #Pega a média do primeiro (mais escuro) tom de cinza no histograma - que representa os núcleos - para separar esse tom
         colors_hist = np.nonzero(hist.flatten())[0]
         first_gray = colors_hist[1]
         second_gray = colors_hist[2]
@@ -49,6 +49,7 @@ if __name__ == "__main__":
         upper_threshold = (first_gray + second_gray) / 2
         plt.axvline(x = lower_threshold, color = "g", label = "lower_threshold")
         plt.axvline(x = upper_threshold, color = "r", label = "upper_threshold")
+        plt.legend()
         plt.plot(hist)
         plt.show()
 
@@ -62,5 +63,3 @@ if __name__ == "__main__":
         plt.title("6 - Núcleos: " + str(len(contours)))
         plt.imshow(img_contours)
         plt.show()
-
-        print("fim")
