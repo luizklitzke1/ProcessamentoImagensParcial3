@@ -52,7 +52,16 @@ if __name__ == "__main__":
         lower_threshold = first_gray / 2
         upper_threshold = (first_gray + second_gray) / 2
 
-        threshhold_img = cv.inRange(img_grayscale, lower_threshold, upper_threshold)
-        plt.imshow(threshhold_img, cmap = "gray")
         plt.title("5 - Threshold")
+        thresholded_img = cv.inRange(img_grayscale, lower_threshold, upper_threshold)
+        plt.imshow(thresholded_img, cmap = "gray")
         plt.show()
+
+    
+        contours, hierarchy = cv.findContours(thresholded_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        img_contours = cv.drawContours(img, contours, -1, (0, 255, 0), 1)
+        plt.title("6 - Núcleos: " + str(len(contours)))
+        plt.imshow(img_contours)
+        plt.show()
+
+        print("fim")
